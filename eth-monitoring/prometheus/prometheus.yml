@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "lighthouse"
+    static_configs:
+      - targets: ["localhost:5054"]
+  - job_name: "reth"
+    static_configs:
+      - targets: ["localhost:9001"]
+  - job_name: "op-node"
+    static_configs:
+      - targets: ["localhost:7300"]
+  - job_name: "op-reth"
+    static_configs:
+      - targets: ["localhost:7301"]

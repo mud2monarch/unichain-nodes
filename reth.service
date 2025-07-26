@@ -1,0 +1,13 @@
+[Unit]
+Description=RETH
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/local/bin/reth node --metrics 127.0.0.1:9001  --authrpc.jwtsecret /secrets/jwt.hex --datadir /home/gyges/.local/share/reth --authrpc.addr 127.0.0.1 --authrpc.port 8551 --http --ws --rpc-max-connections 429496729 --http.api trace,web3,eth,debug --ws.api trace,web3,eth,debug
+
+[Install]
+WantedBy=multi-user.target

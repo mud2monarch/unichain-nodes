@@ -1,0 +1,33 @@
+sudo tee /etc/systemd/system/op-reth.service >/dev/null <<'UNIT'
+[Unit]
+Description=op-reth (Unichain L2 Execution Layer)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=gyges
+Group=gyges
+
+# Adjust this path if your binary lives elsewhere
+ExecStart=/home/gyges/repos/reth/target/release node \
+  --chain unichain \
+  --rollup.sequencer-http https://mainnet.unichain.org \
+  --http --http.addr 127.0.0.1 --http.port 9545 \
+  --ws --ws.addr 127.0.0.1 --ws.port 9546 \
+  --authrpc.addr 127.0.0.1 --authrpc.port 9551 \
+  --authrpc.jwtsecret /home/gyges/.local/share/jwt.hex \
+  --ipcpath /tmp/op-reth.ipc \
+  --datadir /home/gyges/.local/share/reth/unichain \
+  --port 31303 \
+  --metrics 127.0.0.1:7301
+
+Restart=always
+RestartSec=5
+LimitNOFILE=1048576
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target
+UNIT

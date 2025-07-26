@@ -1,0 +1,13 @@
+[Unit]
+Description=Lighthouse
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/local/bin/lighthouse bn --network mainnet --metrics --execution-endpoint http://localhost:8551 --execution-jwt /secrets/jwt.hex --checkpoint-sync-url https://mainnet.checkpoint.sigp.io --disable-deposit-contract-sync
+
+[Install]
+WantedBy=multi-user.target

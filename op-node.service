@@ -1,0 +1,48 @@
+sudo tee /etc/systemd/system/op-node.service >/dev/null <<'UNIT'
+[Unit]
+Description=Optimism op-node (Unichain Mainnet)
+Wants=network-online.target
+After=network-online.target
+# (Optional once you create these)
+# After=op-reth.service lighthouse.service reth.service
+
+[Service]
+Type=simple
+User=gyges
+Group=gyges
+WorkingDirectory=/home/gyges/repos/optimism/op-node
+ExecStart=/home/gyges/repos/optimism/op-node/bin/op-node \
+  --l1=http://127.0.0.1:8545 \
+  --l1.rpckind=standard \
+  --l1.beacon=http://127.0.0.1:5052 \
+  --l2=http://127.0.0.1:9551 \
+  --rpc.addr=127.0.0.1 \
+  --rpc.port=7000 \
+  --metrics.enabled=true \
+  --metrics.addr=127.0.0.1 \
+  --metrics.port=7300 \
+  --l2.jwt-secret=/home/gyges/.local/share/jwt.hex \
+  --network=unichain-mainnet \
+  --syncmode=execution-layer \
+  --l2.enginekind=reth
+Restart=always
+RestartSec=5
+LimitNOFILE=1048576
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+# (Optional hardening; enable once everything works)
+# NoNewPrivileges=yes
+# PrivateTmp=yes
+# ProtectSystem=strict
+# ProtectHome=read-only
+# PrivateDevices=yes
+# RestrictRealtime=yes
+# LockPersonality=yes
+# CapabilityBoundingSet=
+# AmbientCapabilities=
+# MemoryDenyWriteExecute=yes
+
+[Install]
+WantedBy=multi-user.target
+UNIT
